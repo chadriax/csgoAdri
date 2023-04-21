@@ -16,4 +16,8 @@ public class InventoryService {
         return inventoryRepository.findAll();
     }
 
+    public List<InventoryEntity> findByPlayerId(int id){
+        return inventoryRepository.findByPlayerId(id);
+    }
+
 }
