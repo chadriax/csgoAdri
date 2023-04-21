@@ -1,4 +1,4 @@
-package com.csgo.service;
+package com.csgo.entity;
 
 import lombok.Data;
 
