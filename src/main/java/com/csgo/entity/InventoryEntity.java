@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
 @Data
-public class PlayerEntity {
+public class InventoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "gun_id")
     private int gunId;
