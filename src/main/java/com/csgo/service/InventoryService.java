@@ -20,4 +20,8 @@ public class InventoryService {
         return inventoryRepository.findByPlayerId(id);
     }
 
+    public List<InventoryEntity> getAllSkinsOnSale(){
+        return inventoryRepository.findByIsOnSaleIsTrue();
+    }
+
 }

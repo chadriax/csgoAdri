@@ -9,5 +9,6 @@ import java.util.List;
 public interface InventoryRepository extends JpaRepository<InventoryEntity, Integer> {
 
     List<InventoryEntity> findByPlayerId(int id);
+    List<InventoryEntity> findByIsOnSaleIsTrue();
 
 }

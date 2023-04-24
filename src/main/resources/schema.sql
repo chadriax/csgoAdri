@@ -5,6 +5,6 @@ CREATE TABLE inventory (
   gun_status VARCHAR(19),
   gun_ST VARCHAR(50),
   gun_price DECIMAL(8,2),
-  on_sale VARCHAR(50),
+  on_sale BOOLEAN,
   PRIMARY KEY (gun_id)
 );

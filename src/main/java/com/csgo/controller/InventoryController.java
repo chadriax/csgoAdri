@@ -25,4 +25,9 @@ public class InventoryController {
         return inventoryService.findByPlayerId(id);
     }
 
+    @GetMapping("/marketplace")
+    public List<InventoryEntity> getAllSkinsOnSale(){
+        return inventoryService.getAllSkinsOnSale();
+    }
+
 }
