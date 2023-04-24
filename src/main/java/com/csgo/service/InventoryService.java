@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,9 +35,11 @@ public class InventoryService {
     }
 
     public ResponseEntity<Void> sellSkinAndUpdateOnSaleStatus(int playerId, int gunId){
-        Optional<InventoryEntity> optionalSkinToBuy = Optional.ofNullable(inventoryRepository.findById(gunId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no gun with this id: " + gunId)
-        ));
+
+        Optional<InventoryEntity> optionalSkinToBuy = inventoryRepository.findById(gunId);
+        if(optionalSkinToBuy.isEmpty()){
+            throw new EntityNotFoundException("There is no skin with that Id");
+        }
         optionalSkinToBuy.get().setOnSale(false);
         optionalSkinToBuy.get().setPlayerId(playerId);
         inventoryRepository.save(optionalSkinToBuy.get());
