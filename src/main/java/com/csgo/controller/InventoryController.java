@@ -39,7 +39,7 @@ public class InventoryController {
     }
 
     @PutMapping("marketplace/{playerId}/{gunId}")
-    public ResponseEntity<Void> sellSkinAndUpdateOnSaleStatus(@PathVariable int playerId, int gunId){
+    public ResponseEntity<Double> sellSkinAndUpdateOnSaleStatus(@PathVariable int playerId, int gunId){
         return inventoryService.sellSkinAndUpdateOnSaleStatus(playerId, gunId);
     }
 
