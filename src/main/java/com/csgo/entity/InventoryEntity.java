@@ -25,7 +25,7 @@ public class InventoryEntity {
     @Column(name = "gun_status")
     private String gunStatus;
     @Column(name = "gun_ST")
-    private boolean isST;
+    private boolean isStarTrack;
     @Column(name = "gun_price")
     private double gunPrice;
     @Column(name = "on_sale")
