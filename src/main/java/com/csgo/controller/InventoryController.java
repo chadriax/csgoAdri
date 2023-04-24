@@ -20,7 +20,7 @@ public class InventoryController {
         return inventoryService.getAllInventories();
     }
 
-    @GetMapping("/inventories/{id}")
+    @GetMapping("/inventories/player/{id}")
     public List<InventoryEntity> getAllInventoryByPlayerId(@PathVariable int id){
         return inventoryService.findByPlayerId(id);
     }
