@@ -26,9 +26,9 @@ public class ServiceTest {
 
     @Test
     public void getAllInventoriesTest(){
-        List<InventoryEntity> actualInventories = Arrays.asList(new InventoryEntity(1,2,"invented", "FN", true, 154.7));
+        List<InventoryEntity> actualInventories = Arrays.asList(new InventoryEntity(1,2,"invented", "FN", true, 154.7, false));
         Mockito.when(inventoryRepository.findAll()).thenReturn(actualInventories);
-        Assertions.assertEquals(0, actualInventories.size());
+        Assertions.assertEquals(1, actualInventories.size());
     }
 
 }

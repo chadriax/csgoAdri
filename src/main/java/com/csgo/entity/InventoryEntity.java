@@ -12,10 +12,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 public class InventoryEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "gun_id")
-    private int gunId;
+    private Integer gunId;
+
     @Column(name = "player_id")
     private int playerId;
     @Column(name = "gun_name")
@@ -26,5 +28,7 @@ public class InventoryEntity {
     private boolean isST;
     @Column(name = "gun_price")
     private double gunPrice;
+    @Column(name = "on_sale")
+    private boolean isOnSale;
 
 }
