@@ -73,6 +73,6 @@ public class InventoryService {
                 .bodyToMono(PlayerEntity.class);
 
         return response.map(result -> result.getMoney() >= gunPrice)
-                .onErrorMap(error -> new RuntimeException("Error retrieving information from external microservice"));
+                .onErrorMap(error -> new EntityNotFoundException(error.getMessage()));
     }
 }
