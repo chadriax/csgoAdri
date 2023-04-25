@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -39,7 +40,7 @@ public class InventoryController {
     }
 
     @PutMapping("marketplace/{playerId}/{gunId}")
-    public ResponseEntity<Double> sellSkinAndUpdateOnSaleStatus(@PathVariable int playerId, int gunId){
+    public ResponseEntity<Map<String, Double>> sellSkinAndUpdateOnSaleStatus(@PathVariable int playerId, int gunId){
         return inventoryService.sellSkinAndUpdateOnSaleStatus(playerId, gunId);
     }
 
