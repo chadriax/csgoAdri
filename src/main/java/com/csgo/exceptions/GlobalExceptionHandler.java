@@ -21,4 +21,16 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> paymentException(NotEnoughBalanceException exception){
+        ExceptionResponse response = new ExceptionResponse(LocalDate.now(), exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.PAYMENT_REQUIRED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ExceptionResponse> notInSaleException(NotInSaleException exception){
+        ExceptionResponse response = new ExceptionResponse(LocalDate.now(), exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 }
