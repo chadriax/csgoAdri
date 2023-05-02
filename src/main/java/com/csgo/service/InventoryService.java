@@ -5,6 +5,7 @@ import com.csgo.entity.PlayerEntity;
 import com.csgo.exceptions.NotEnoughBalanceException;
 import com.csgo.exceptions.NotInSaleException;
 import com.csgo.repository.InventoryRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class InventoryService {
 
-    @Autowired
     InventoryRepository inventoryRepository;
 
     public List<InventoryEntity> getAllInventories(){

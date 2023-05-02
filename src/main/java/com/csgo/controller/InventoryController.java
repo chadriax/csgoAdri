@@ -2,6 +2,7 @@ package com.csgo.controller;
 
 import com.csgo.entity.InventoryEntity;
 import com.csgo.service.InventoryService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +15,9 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@AllArgsConstructor
 public class InventoryController {
 
-    @Autowired
     InventoryService inventoryService;
 
     @GetMapping("/inventories")
