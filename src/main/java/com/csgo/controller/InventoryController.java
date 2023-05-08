@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class InventoryController {
     }
 
     @PutMapping("marketplace/{playerId}/{gunId}")
-    public ResponseEntity<Map<String, Double>> sellSkinAndUpdateOnSaleStatus(@PathVariable int playerId, int gunId){
+    public Mono<ResponseEntity<Map<String, Double>>> sellSkinAndUpdateOnSaleStatus(@PathVariable int playerId, int gunId){
         return inventoryService.sellSkinAndUpdateOnSaleStatus(playerId, gunId);
     }
 

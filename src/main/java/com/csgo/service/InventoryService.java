@@ -1,28 +1,32 @@
 package com.csgo.service;
 
+import com.csgo.Connection.GetExternalInformation;
 import com.csgo.entity.InventoryEntity;
 import com.csgo.entity.PlayerEntity;
 import com.csgo.exceptions.NotEnoughBalanceException;
 import com.csgo.exceptions.NotInSaleException;
 import com.csgo.repository.InventoryRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @AllArgsConstructor
 public class InventoryService {
 
     InventoryRepository inventoryRepository;
+
+    private GetExternalInformation getExternalInformation;
 
     public List<InventoryEntity> getAllInventories(){
         return inventoryRepository.findAll();
@@ -40,40 +44,40 @@ public class InventoryService {
         return inventoryRepository.findByIsOnSaleIsTrue();
     }
 
-    public ResponseEntity<Map<String, Double>> sellSkinAndUpdateOnSaleStatus(int playerId, int gunId){
-
+    public Mono<ResponseEntity<Map<String, Double>>> sellSkinAndUpdateOnSaleStatus(int playerId, int gunId) {
         Optional<InventoryEntity> optionalSkinToBuy = inventoryRepository.findById(gunId);
-        if(optionalSkinToBuy.isEmpty()) {
+        if (optionalSkinToBuy.isEmpty()) {
             throw new EntityNotFoundException("There is no skin with that Id");
         }
-        if(Boolean.TRUE.equals(canAffordIt(optionalSkinToBuy.get().getGunPrice(), playerId).block()) && isOnSale(optionalSkinToBuy)){
-            optionalSkinToBuy.get().setOnSale(false);
-            optionalSkinToBuy.get().setPlayerId(playerId);
-            inventoryRepository.save(optionalSkinToBuy.get());
-            Map<String, Double> response = new HashMap<>();
-            response.put("gunPrice", optionalSkinToBuy.get().getGunPrice());
-            return ResponseEntity.ok(response);
-        }
-        throw new NotEnoughBalanceException("There is not enough balance to complete the operation");
+        InventoryEntity skinToBuy = optionalSkinToBuy.get();
 
+        Map<String, Double> response = new HashMap<>();
+
+        return canAffordIt(skinToBuy.getGunPrice(), playerId)
+                .flatMap(validateCanBuy -> {
+                    if (Boolean.TRUE.equals(validateCanBuy) && isOnSale(skinToBuy)){
+                        skinToBuy.setOnSale(false);
+                        skinToBuy.setPlayerId(playerId);
+                        inventoryRepository.save(skinToBuy);
+                        response.put("gunPrice", skinToBuy.getGunPrice());
+                    }else {
+                        throw new NotEnoughBalanceException("There is not enough balance to complete the operation");
+                    }
+                    return Mono.just(ResponseEntity.ok(response));
+                });
     }
 
-    private boolean isOnSale(Optional<InventoryEntity> optionalSkinToBuy) {
-        if(!optionalSkinToBuy.get().isOnSale()){
+    private boolean isOnSale(InventoryEntity skinToBuy) {
+        if (!skinToBuy.isOnSale()) {
             throw new NotInSaleException("The gun selected is not on sale");
         }
         return true;
     }
 
+    @Transactional
     public Mono<Boolean> canAffordIt(double gunPrice, int playerId) {
-        WebClient webClient = WebClient.create();
-
-        Mono<PlayerEntity> response = webClient.get()
-                .uri("http://localhost:8080/players/" + playerId)
-                .retrieve()
-                .bodyToMono(PlayerEntity.class);
-
-        return response.map(result -> result.getMoney() >= gunPrice)
-                .onErrorMap(error -> new EntityNotFoundException(error.getMessage()));
+        return getExternalInformation.GetInfoMethod("http://localhost:8080/players/" + playerId,
+                        new ParameterizedTypeReference<PlayerEntity>() {})
+                .map(result -> result.getMoney() >= gunPrice);
     }
 }
